@@ -33,7 +33,7 @@
  * -----------------------------------------------------------------------------
  * --- DEPENDENCIES ------------------------------------------------------------
  */
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "smtc_hal_gpio_pin_names.h"
 #include "smtc_hal_i2c.h"
 #include "smtc_hal_mcu.h"

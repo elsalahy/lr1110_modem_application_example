@@ -43,7 +43,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "utilities.h"
 #include "smtc_hal_gpio_pin_names.h"
 

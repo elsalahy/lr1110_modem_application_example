@@ -37,7 +37,7 @@
 #include <stdint.h>   // C99 types
 #include <stdbool.h>  // bool type
 
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "smtc_hal_watchdog.h"
 
 /*

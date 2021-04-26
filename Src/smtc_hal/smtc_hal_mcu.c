@@ -37,7 +37,7 @@
 #include <stdint.h>   // C99 types
 #include <stdbool.h>  // bool type
 
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "stm32l4xx_ll_utils.h"
 #include "lr1110-modem-board.h"
 #include "smtc_hal.h"
@@ -143,7 +143,7 @@ static void hal_mcu_reinit( void );
 static void hal_mcu_reinit_periph( void );
 
 /*!
- * \brief deinit the peripherals 
+ * \brief deinit the peripherals
  */
 static void hal_mcu_deinit_periph( void );
 
@@ -176,7 +176,7 @@ void hal_mcu_init_periph( void )
 {
     // Init TX & RX Leds
     leds_init();
-    
+
     // External supplies
     external_supply_init( LNA_SUPPLY_MASK );
 
@@ -187,10 +187,10 @@ void hal_mcu_init_periph( void )
 }
 
 static void hal_mcu_reinit_periph( void )
-{   
+{
     // Leds
     leds_init( );
-    
+
     // External supplies
     external_supply_init( LNA_SUPPLY_MASK );
 }
@@ -199,7 +199,7 @@ void hal_mcu_deinit_periph( void )
 {
     // Leds
     leds_deinit();
-    
+
     // Disable external supply
     external_supply_deinit( LNA_SUPPLY_MASK );
 
@@ -219,7 +219,7 @@ void hal_mcu_init( void )
 
     // Initialize low power timer
     hal_tmr_init( );
-    
+
     // Init power voltage voltage detector
     hal_mcu_pvd_config( );
 
@@ -377,7 +377,7 @@ static void hal_mcu_system_clock_config( void )
     // Configure the main internal regulator output voltage
     __HAL_RCC_PWR_CLK_ENABLE( );
     __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
-    /* Ensure that MSI is wake-up system clock */ 
+    /* Ensure that MSI is wake-up system clock */
     __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
 
     // Initializes the CPU, AHB and APB busses clocks
@@ -391,7 +391,7 @@ static void hal_mcu_system_clock_config( void )
     rcc_osc_init.MSIClockRange       = RCC_MSIRANGE_11;
     rcc_osc_init.PLL.PLLState        = RCC_PLL_ON;
     rcc_osc_init.PLL.PLLSource       = RCC_PLLSOURCE_MSI;
-    rcc_osc_init.PLL.PLLM            = 3;      
+    rcc_osc_init.PLL.PLLM            = 3;
     rcc_osc_init.PLL.PLLN            = 10;
     rcc_osc_init.PLL.PLLP            = RCC_PLLP_DIV7;
     rcc_osc_init.PLL.PLLQ            = RCC_PLLQ_DIV2;
@@ -406,7 +406,7 @@ static void hal_mcu_system_clock_config( void )
     rcc_clk_init.AHBCLKDivider  = RCC_SYSCLK_DIV1;
     rcc_clk_init.APB1CLKDivider = RCC_HCLK_DIV1;
     rcc_clk_init.APB2CLKDivider = RCC_HCLK_DIV1;
-    
+
     if( HAL_RCC_ClockConfig( &rcc_clk_init, FLASH_LATENCY_1 ) != HAL_OK )
     {
     }
@@ -419,7 +419,7 @@ static void hal_mcu_system_clock_config( void )
     if( HAL_RCCEx_PeriphCLKConfig( &periph_clk_init ) != HAL_OK )
     {
     }
-    
+
     // Configure the Systick interrupt time
     HAL_SYSTICK_Config( HAL_RCC_GetHCLKFreq( ) / 1000 );
 
@@ -597,7 +597,7 @@ static void hal_mcu_reinit( void )
 #if(ACCELEROMETER_MOUNTED == 1)
     hal_i2c_init(HAL_I2C_ID, I2C_SDA, I2C_SCL);
 #endif
-    
+
     // Initialize UART
 #if( HAL_USE_PRINTF_UART == HAL_FEATURE_ON )
     hal_uart_init( HAL_PRINTF_UART_ID, UART_TX, UART_RX);
@@ -618,7 +618,7 @@ static void hal_mcu_system_clock_re_config_after_stop( void )
     // Configure the main internal regulator output voltage
     __HAL_RCC_PWR_CLK_ENABLE( );
     __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
-    /* Ensure that MSI is wake-up system clock */ 
+    /* Ensure that MSI is wake-up system clock */
     __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
 
     // Initializes the CPU, AHB and APB busses clocks
@@ -632,7 +632,7 @@ static void hal_mcu_system_clock_re_config_after_stop( void )
     rcc_osc_init.MSIClockRange       = RCC_MSIRANGE_11;
     rcc_osc_init.PLL.PLLState        = RCC_PLL_ON;
     rcc_osc_init.PLL.PLLSource       = RCC_PLLSOURCE_MSI;
-    rcc_osc_init.PLL.PLLM            = 3;      
+    rcc_osc_init.PLL.PLLM            = 3;
     rcc_osc_init.PLL.PLLN            = 10;
     rcc_osc_init.PLL.PLLP            = RCC_PLLP_DIV7;
     rcc_osc_init.PLL.PLLQ            = RCC_PLLQ_DIV2;
@@ -647,7 +647,7 @@ static void hal_mcu_system_clock_re_config_after_stop( void )
     rcc_clk_init.AHBCLKDivider  = RCC_SYSCLK_DIV1;
     rcc_clk_init.APB1CLKDivider = RCC_HCLK_DIV1;
     rcc_clk_init.APB2CLKDivider = RCC_HCLK_DIV1;
-    
+
     if( HAL_RCC_ClockConfig( &rcc_clk_init, FLASH_LATENCY_1 ) != HAL_OK )
     {
     }

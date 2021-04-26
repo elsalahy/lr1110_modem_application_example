@@ -28,7 +28,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
  /*
  * -----------------------------------------------------------------------------
  * --- DEPENDENCIES ------------------------------------------------------------
@@ -36,7 +36,7 @@
 
 #include <time.h>
 #include <math.h>
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "stm32l4xx_ll_rtc.h"
 #include "smtc_hal_mcu.h"
 #include "smtc_hal_rtc.h"

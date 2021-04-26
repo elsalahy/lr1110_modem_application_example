@@ -37,7 +37,7 @@
 #include <stdint.h>   // C99 types
 #include <stdbool.h>  // bool type
 
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "smtc_hal_rng.h"
 #include "smtc_hal_mcu.h"
 
@@ -130,7 +130,7 @@ void HAL_RNG_MspInit( RNG_HandleTypeDef* hrng )
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RNG;
     PeriphClkInitStruct.RngClockSelection = RCC_RNGCLKSOURCE_MSI;
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
-    
+
     // RNG Peripheral clock enable
     __RNG_CLK_ENABLE( );
 }

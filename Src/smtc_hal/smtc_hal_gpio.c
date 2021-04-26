@@ -37,7 +37,7 @@
 #include <stdint.h>   // C99 types
 #include <stdbool.h>  // bool type
 
-#include "stm32l4xx_hal.h"
+#include "stm32l0xx_hal.h"
 #include "smtc_hal_mcu.h"
 #include "smtc_hal_gpio.h"
 
@@ -229,7 +229,7 @@ static void hal_gpio_init( const hal_gpio_t* gpio, const uint32_t value,
     gpio_local.Pull      = gpio->pull;
     gpio_local.Speed     = gpio->speed;
     gpio_local.Alternate = gpio->alternate;
-	
+
 	if(gpio_port == GPIOA)
 	{
 		__HAL_RCC_GPIOA_CLK_ENABLE( );
@@ -254,7 +254,7 @@ static void hal_gpio_init( const hal_gpio_t* gpio, const uint32_t value,
 	{
 		__HAL_RCC_GPIOH_CLK_ENABLE( );
 	}
-	
+
     HAL_GPIO_WritePin( gpio_port, gpio_local.Pin, ( GPIO_PinState ) value );
     HAL_GPIO_Init( gpio_port, &gpio_local );
 
@@ -292,7 +292,7 @@ static void hal_gpio_init( const hal_gpio_t* gpio, const uint32_t value,
         case 9:
             HAL_NVIC_SetPriority( EXTI9_5_IRQn, 0, 0 );
             HAL_NVIC_EnableIRQ( EXTI9_5_IRQn );
-            break;            
+            break;
         default:
             HAL_NVIC_SetPriority( EXTI15_10_IRQn, 0, 0 );
             HAL_NVIC_EnableIRQ( EXTI15_10_IRQn );
