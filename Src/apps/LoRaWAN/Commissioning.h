@@ -50,7 +50,7 @@ extern "C" {
  * -----------------------------------------------------------------------------
  * --- PUBLIC CONSTANTS --------------------------------------------------------
  */
- 
+
 /*!
  ******************************************************************************
  ********************************** WARNING ***********************************
@@ -88,7 +88,7 @@ extern "C" {
  */
 #define LORAWAN_DEVICE_EUI                     \
     {                                          \
-        IEEE_OUI, 0x00, 0x00, 0x00, 0x00, 0x00 \
+        0x00, 0x04, 0xA3, 0x10, 0x00, 0x1A, 0xAE, 0x9B \
     }
 #define LORAWAN_DEVICE_EUI_LEN 8
 
@@ -97,7 +97,7 @@ extern "C" {
  */
 #define LORAWAN_JOIN_EUI                               \
     {                                                  \
-        0x00, 0x16, 0xC0, 0x01, 0xFF, 0xFE, 0x00, 0x01 \
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
     }
 #define LORAWAN_JOIN_EUI_LEN 8
 
@@ -107,14 +107,14 @@ extern "C" {
  */
 #define LORAWAN_APP_KEY                                                                                \
     {                                                                                                  \
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+        0xD0, 0x4C, 0x97, 0x12, 0xED, 0x3F, 0xFC, 0x39, 0xCB, 0x75, 0xA5, 0x6F, 0xD9, 0x50, 0x9E, 0xB7 \
     }
 #define LORAWAN_APP_KEY_LEN 16
 
 /*!
  * \brief Use or not the Semtech join server
  */
-#define USE_SEMTECH_JOIN_SERVER 1
+#define USE_SEMTECH_JOIN_SERVER 0
 
 /*
  * -----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-    
+
 #endif  // __LORA_COMMISSIONING_H__
 
 /* --- EOF ------------------------------------------------------------------ */

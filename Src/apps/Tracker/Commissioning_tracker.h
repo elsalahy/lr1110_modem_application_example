@@ -28,7 +28,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #ifndef __COMMISSIONING_TRACKER_H__
 #define __COMMISSIONING_TRACKER_H__
 
@@ -88,7 +88,7 @@ extern "C" {
  */
 #define LORAWAN_DEVICE_EUI                     \
     {                                          \
-        IEEE_OUI, 0x00, 0x00, 0x00, 0x00, 0x00 \
+        0x00, 0x04, 0xA3, 0x10, 0x00, 0x1A, 0xAE, 0x9B \
     }
 #define LORAWAN_DEVICE_EUI_LEN 8
 
@@ -97,7 +97,7 @@ extern "C" {
  */
 #define LORAWAN_JOIN_EUI                               \
     {                                                  \
-        0x00, 0x16, 0xC0, 0x01, 0xFF, 0xFE, 0x00, 0x01 \
+        0xDE, 0xAD, 0xBE, 0xEF, 0xAA, 0xCC, 0xDD, 0x12 \
     }
 #define LORAWAN_JOIN_EUI_LEN 8
 
@@ -106,14 +106,14 @@ extern "C" {
  */
 #define LORAWAN_APP_KEY                                                                                \
     {                                                                                                  \
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+        0xE7, 0x0B, 0x44, 0x61, 0xB7, 0xE8, 0x71, 0x1B, 0x50, 0xDC, 0xDE, 0xDA, 0x17, 0x44, 0x57, 0xBF \
     }
 #define LORAWAN_APP_KEY_LEN 16
 
 /*!
  * \brief Use or not the Semtech join server.
  */
-#define USE_SEMTECH_JOIN_SERVER 1
+#define USE_SEMTECH_JOIN_SERVE 0
 
 /*
  * -----------------------------------------------------------------------------
@@ -130,5 +130,5 @@ extern "C" {
 #endif
 
 #endif  // __COMMISSIONING_TRACKER_H__
-    
+
 /* --- EOF ------------------------------------------------------------------ */

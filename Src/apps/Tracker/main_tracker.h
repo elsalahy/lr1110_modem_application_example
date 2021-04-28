@@ -78,12 +78,12 @@ extern "C" {
 /*!
  * \brief Use or not the LoRaWAN production Keys.
  */
-#define USE_PRODUCTION_KEYS 1
+#define USE_PRODUCTION_KEYS 0
 
 /*!
  * Defines the application firmware version
  */
- 
+
 /*!
  * \brief Defines the application firmware version
  */
