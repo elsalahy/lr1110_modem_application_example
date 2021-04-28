@@ -65,24 +65,24 @@ extern "C" {
  */
 
 //Radio specific pinout and peripherals
-#define RADIO_SPI_MOSI          PA_7
-#define RADIO_SPI_MISO          PA_6
-#define RADIO_SPI_SCLK          PA_5
-#define RADIO_NSS               PA_8
-#define RADIO_NRST              PA_0
-#define RADIO_EVENT             PB_4
-#define RADIO_BUSY_PIN          PB_3
-#define RADIO_RESET             PA_0    
+#define RADIO_SPI_MOSI          PB_5
+#define RADIO_SPI_MISO          PB_4
+#define RADIO_SPI_SCLK          PB_3
+#define RADIO_NSS               PA_4
+#define RADIO_NRST              PB_9
+#define RADIO_EVENT             PB_8
+#define RADIO_BUSY_PIN          PB_10
+#define RADIO_RESET             PB_9
 
 
-#define LNA_PON                 PB_0
-#define RADIO_FREQ_SEL          PA_1
-#define RADIO_DEVICE_SEL        PA_4
+#define LNA_PON                 PB_1
+#define RADIO_FREQ_SEL          PB_2
+#define RADIO_DEVICE_SEL        PA_15
 
-#define LED_TX                  PC_1
-#define LED_RX                  PC_0
+#define LED_TX                  PA_6
+#define LED_RX                  PB_0
 
-#define ACC_INT1                PA_9
+#define ACC_INT1                PA_0
 
 #define OSC_LSE_IN_PIN          PC_14
 #define OSC_LSE_OUT_PIN         PC_15
@@ -93,8 +93,8 @@ extern "C" {
 #define SWCLK_PIN               PA_14
 #define SWDAT_PIN               PA_13
 
-#define I2C_SCL                 PB_8
-#define I2C_SDA                 PB_9
+#define I2C_SCL                 PB_6
+#define I2C_SDA                 PB_7
 
 #define UART_TX                 PA_2
 #define UART_RX                 PA_3

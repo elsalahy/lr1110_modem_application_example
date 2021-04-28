@@ -50,16 +50,13 @@ extern "C" {
 #include "smtc_hal_tmr.h"
 #include "smtc_hal_tmr_list.h"
 #include "smtc_hal_watchdog.h"
-#include "smtc_hal_rng.h"
 #include "smtc_hal_gpio.h"
 #include "smtc_hal_spi.h"
 #include "smtc_hal_uart.h"
-#include "smtc_hal_i2c.h"
 
 #include "board-config.h"
 
 /* user peripheral */
-#include "lis2de12.h"
 #include "leds.h"
 #include "external_supply.h"
 

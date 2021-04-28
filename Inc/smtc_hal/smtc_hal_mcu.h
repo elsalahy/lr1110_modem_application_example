@@ -65,7 +65,7 @@ extern "C" {
  * --- PUBLIC CONSTANTS --------------------------------------------------------
  */
 
-#define ACCELEROMETER_MOUNTED    1
+#define ACCELEROMETER_MOUNTED    0
 
 /*
  * -----------------------------------------------------------------------------

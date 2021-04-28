@@ -37,7 +37,7 @@
 #include <time.h>
 #include <math.h>
 #include "stm32l0xx_hal.h"
-#include "stm32l4xx_ll_rtc.h"
+#include "stm32l0xx_ll_rtc.h"
 #include "smtc_hal_mcu.h"
 #include "smtc_hal_rtc.h"
 #include "smtc_hal_tmr_list.h"
@@ -169,8 +169,6 @@ void hal_rtc_init( void )
     RTC_TimeTypeDef time;
     RTC_DateTypeDef date;
 
-    __HAL_RCC_RTC_ENABLE( );
-
     hal_rtc.handle.Instance            = RTC;
     hal_rtc.handle.Init.HourFormat     = RTC_HOURFORMAT_24;
     hal_rtc.handle.Init.AsynchPrediv   = PREDIV_A;
@@ -206,8 +204,8 @@ void hal_rtc_init( void )
     // registers)
     HAL_RTCEx_EnableBypassShadow( &hal_rtc.handle );
 
-    HAL_NVIC_SetPriority( RTC_Alarm_IRQn, 1, 0 );
-    HAL_NVIC_EnableIRQ( RTC_Alarm_IRQn );
+    HAL_NVIC_SetPriority( RTC_IRQn, 1, 0 );
+    HAL_NVIC_EnableIRQ( RTC_IRQn );
 
     // Init alarm.
     HAL_RTC_DeactivateAlarm( &hal_rtc.handle, RTC_ALARM_A );
@@ -537,14 +535,14 @@ void RTC_WKUP_IRQHandler( void ) { HAL_RTCEx_WakeUpTimerIRQHandler( &hal_rtc.han
 void HAL_RTC_MspInit( RTC_HandleTypeDef* rtc_handle )
 {
     __HAL_RCC_RTC_ENABLE( );
-    HAL_NVIC_SetPriority( RTC_WKUP_IRQn, 0, 0 );
-    HAL_NVIC_EnableIRQ( RTC_WKUP_IRQn );
+    HAL_NVIC_SetPriority( RTC_IRQn, 0, 0 );
+    HAL_NVIC_EnableIRQ( RTC_IRQn );
 }
 
 void HAL_RTC_MspDeInit( RTC_HandleTypeDef* rtc_handle )
 {
     __HAL_RCC_RTC_DISABLE( );
-    HAL_NVIC_DisableIRQ( RTC_WKUP_IRQn );
+    HAL_NVIC_DisableIRQ( RTC_IRQn );
 }
 
 uint32_t hal_rtc_get_minimum_timeout( void ) { return ( MIN_ALARM_DELAY_IN_TICKS ); }

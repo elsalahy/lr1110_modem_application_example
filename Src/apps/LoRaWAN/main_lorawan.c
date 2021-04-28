@@ -101,7 +101,7 @@
  * -----------------------------------------------------------------------------
  * --- PRIVATE TYPES -----------------------------------------------------------
  */
- 
+
 /*
  * -----------------------------------------------------------------------------
  * --- PRIVATE VARIABLES -------------------------------------------------------
@@ -404,7 +404,7 @@ int main( void )
     }
 
     /* Init the software watchdog */
-    hal_mcu_init_software_watchdog( WATCHDOG_TIMEOUT );
+    // hal_mcu_init_software_watchdog( WATCHDOG_TIMEOUT );
 
     /* Init Leds timer */
     timer_init( &led_tx_timer, on_led_tx_timer_event );
@@ -447,7 +447,7 @@ int main( void )
                 print_lorawan_keys( dev_eui, join_eui, app_key, pin );
 
                 join_network( );
-            
+
                 device_state = DEVICE_STATE_CYCLE;
 
                 break;
@@ -457,7 +457,7 @@ int main( void )
                 prepare_tx_frame( app_port, app_data_buffer, &app_data_size, 4 );
 
                 send_frame( app_port, app_data_buffer, app_data_size, is_tx_confirmed );
-                
+
                 device_state = DEVICE_STATE_CYCLE;
                 break;
             }
@@ -465,7 +465,7 @@ int main( void )
             {
                 /* Reload the software watchdog */
                 hal_mcu_reset_software_watchdog( );
-                
+
                 device_state = DEVICE_STATE_SLEEP;
 
                 // Schedule next packet transmission
@@ -640,7 +640,7 @@ static bool send_frame( const uint8_t port, const uint8_t* tx_frame_buffer, cons
     uint32_t                     duty_cycle;
 
     lr1110_modem_get_duty_cycle_status( &lr1110, &duty_cycle );
-    
+
     if( duty_cycle == 0 )
     {
         lr1110_modem_get_next_tx_max_payload( &lr1110, &tx_max_payload );
@@ -674,7 +674,7 @@ static bool send_frame( const uint8_t port, const uint8_t* tx_frame_buffer, cons
     else
     {
         HAL_DBG_TRACE_INFO( "DUTY CYCLE, NEXT UPLINK AVAIABLE in %d milliseconds \r\n\r\n", duty_cycle );
-        
+
         return false;
     }
 }
@@ -711,7 +711,7 @@ static void lr1110_modem_reset_event( uint16_t reset_count )
 void lr1110_modem_network_joined( void )
 {
     HAL_DBG_TRACE_INFO( "###### ===== JOINED ==== ######\r\n\r\n" );
-    
+
     /* Set the ADR profile once joined */
     lr1110_modem_set_adr_profile( &lr1110, LORAWAN_DEFAULT_DATARATE, adr_custom_list );
 }
@@ -721,7 +721,7 @@ void lr1110_modem_join_fail( void ) { HAL_DBG_TRACE_INFO( "###### ===== JOINED F
 static void modem_status_to_string( lr1110_modem_status_t modem_status )
 {
     HAL_DBG_TRACE_MSG( "Modem status : ");
-    
+
     if( (modem_status & LR1110_LORAWAN_BROWNOUT) == LR1110_LORAWAN_BROWNOUT )
     {
         HAL_DBG_TRACE_MSG( "BROWNOUT ");
@@ -754,7 +754,7 @@ static void modem_status_to_string( lr1110_modem_status_t modem_status )
     {
         HAL_DBG_TRACE_MSG( "STREAM ");
     }
-    
+
     HAL_DBG_TRACE_MSG( "\r\n\r\n" );
 }
 
@@ -881,7 +881,7 @@ static void lr1110_modem_stream_done( void )
 static void lr1110_modem_time_updated_alc_sync( lr1110_modem_alc_sync_state_t  alc_sync_state )
 {
     HAL_DBG_TRACE_INFO( "###### ===== APPLICATION LAYER CLOCK SYNC EVENT ==== ######\r\n\r\n" );
-    
+
     if( alc_sync_state == LR1110_MODEM_ALC_SYNC_SYNCHRONIZED )
     {
         HAL_DBG_TRACE_MSG("CLOCK SYNC STATE SYNCHRONIZED\r\n");

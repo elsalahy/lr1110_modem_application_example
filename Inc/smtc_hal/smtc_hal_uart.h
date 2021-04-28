@@ -64,39 +64,17 @@ extern "C" {
  * --- PUBLIC FUNCTIONS PROTOTYPES ---------------------------------------------
  */
 
-/*!
- * \brief Initializes the MCU UART peripheral
- *
- * \param [in] id UART interface id [1:N]
- * \param [in] uart_tx UART TX pin name to be used
- * \param [in] uart_rx UART RX pin name to be used
- */
-void hal_uart_init( const uint32_t id, const hal_gpio_pin_names_t uart_tx, const hal_gpio_pin_names_t uart_rx );
+void hal_uart1_init( void );
+void hal_uart2_init( void );
 
-/*!
- * \brief Deinitializes the MCU UART peripheral
- *
- * \param [in] id UART interface id [1:N]
- */
-void hal_uart_deinit( const uint32_t id );
+void hal_uart1_deinit( void );
+void hal_uart2_deinit( void );
 
-/*!
- * \brief Send an amount on data on the UART bus
- *
- * \param [in] id UART interface id [1:N]
- * \param [in] buff buffer containing data to send
- * \param [in] len data length to send
- */
-void hal_uart_tx( const uint32_t id, uint8_t* buff, uint16_t len );
+void hal_uart1_dma_start_rx( uint8_t* buff, uint16_t size );
+void hal_uart1_dma_stop_rx( void );
 
-/*!
- * \brief Receive an amount on data on the UART bus
- *
- * \param [in] id UART interface id [1:N]
- * \param [in] rx_buffer buffer receiving data
- * \param [in] len data length to receive
- */
-void hal_uart_rx( const uint32_t id, uint8_t* rx_buffer, uint8_t len );
+void hal_uart1_tx( uint8_t* buff, uint8_t len );
+void hal_uart2_tx( uint8_t* buff, uint8_t len );
 
 #ifdef __cplusplus
 }

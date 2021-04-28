@@ -28,7 +28,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #ifndef __LR1110_MODEM_BOARD_H__
 #define __LR1110_MODEM_BOARD_H__
 
@@ -47,7 +47,6 @@ extern "C" {
 #include <string.h>
 #include "smtc_hal.h"
 #include "board-config.h"
-#include "lis2de12.h"
 #include "leds.h"
 #include "lr1110.h"
 

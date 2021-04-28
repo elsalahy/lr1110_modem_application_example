@@ -38,7 +38,7 @@
 #include <stdbool.h>  // bool type
 
 #include "stm32l0xx_hal.h"
-#include "stm32l4xx_ll_spi.h"
+#include "stm32l0xx_ll_spi.h"
 #include "smtc_hal_gpio_pin_names.h"
 #include "smtc_hal_spi.h"
 #include "smtc_hal_mcu.h"
@@ -159,12 +159,12 @@ void HAL_SPI_MspInit( SPI_HandleTypeDef* spiHandle )
 {
     if( spiHandle->Instance == hal_spi[0].interface )
     {
-        GPIO_TypeDef*    gpio_port = ( GPIO_TypeDef* ) ( AHB2PERIPH_BASE + ( ( hal_spi[0].pins.mosi & 0xF0 ) << 6 ) );
+        GPIO_TypeDef*    gpio_port = ( GPIO_TypeDef* ) ( IOPPERIPH_BASE + ( ( hal_spi[0].pins.mosi & 0xF0 ) << 6 ) );
         GPIO_InitTypeDef gpio      = {
             .Mode      = GPIO_MODE_AF_PP,
             .Pull      = GPIO_NOPULL,
-            .Speed     = GPIO_SPEED_FREQ_HIGH,
-            .Alternate = GPIO_AF5_SPI1,
+            .Speed     = GPIO_SPEED_HIGH,
+            .Alternate = GPIO_AF0_SPI1,
         };
         gpio.Pin = ( 1 << ( hal_spi[0].pins.mosi & 0x0F ) ) | ( 1 << ( hal_spi[0].pins.miso & 0x0F ) ) |
                    ( 1 << ( hal_spi[0].pins.sclk & 0x0F ) );
@@ -174,17 +174,14 @@ void HAL_SPI_MspInit( SPI_HandleTypeDef* spiHandle )
     }
     else if( spiHandle->Instance == hal_spi[1].interface )
     {
-        GPIO_TypeDef* gpio_port =
-            ( GPIO_TypeDef* ) ( AHB2PERIPH_BASE +
-                                ( ( hal_spi[1].pins.mosi & 0xF0 ) << 6 ) );
-        GPIO_InitTypeDef gpio = {
+        GPIO_TypeDef*    gpio_port = ( GPIO_TypeDef* ) ( IOPPERIPH_BASE + ( ( hal_spi[1].pins.mosi & 0xF0 ) << 6 ) );
+        GPIO_InitTypeDef gpio      = {
             .Mode      = GPIO_MODE_AF_PP,
             .Pull      = GPIO_NOPULL,
             .Speed     = GPIO_SPEED_HIGH,
-            .Alternate = GPIO_AF5_SPI2,
+            .Alternate = GPIO_AF0_SPI2,
         };
-        gpio.Pin = ( 1 << ( hal_spi[1].pins.mosi & 0x0F ) ) |
-                   ( 1 << ( hal_spi[1].pins.miso & 0x0F ) ) |
+        gpio.Pin = ( 1 << ( hal_spi[1].pins.mosi & 0x0F ) ) | ( 1 << ( hal_spi[1].pins.miso & 0x0F ) ) |
                    ( 1 << ( hal_spi[1].pins.sclk & 0x0F ) );
         HAL_GPIO_Init( gpio_port, &gpio );
 
@@ -213,7 +210,7 @@ void HAL_SPI_MspDeInit( SPI_HandleTypeDef* spiHandle )
         hal_mcu_panic( );
     }
 
-    HAL_GPIO_DeInit( ( GPIO_TypeDef* ) ( AHB2PERIPH_BASE + ( ( hal_spi[local_id].pins.mosi & 0xF0 ) << 6 ) ),
+    HAL_GPIO_DeInit( ( GPIO_TypeDef* ) ( IOPPERIPH_BASE + ( ( hal_spi[local_id].pins.mosi & 0xF0 ) << 6 ) ),
                      ( 1 << ( hal_spi[local_id].pins.mosi & 0x0F ) ) | ( 1 << ( hal_spi[local_id].pins.miso & 0x0F ) ) |
                          ( 1 << ( hal_spi[local_id].pins.sclk & 0x0F ) ) );
 }

@@ -76,7 +76,7 @@
 #define LORAWAN_DUTYCYCLE_ON LR1110_MODEM_DUTY_CYCLE_ENABLE
 
 /*!
- * \brief Use the accelerometer movement in application 
+ * \brief Use the accelerometer movement in application
  *
  * \remark see ACCELEROMETER_MOUNTED definition
  */
@@ -366,7 +366,7 @@ int main( void )
 
     /* Board is initialized */
     leds_blink( LED_ALL_MASK, 100, 2, true );
-    
+
     HAL_DBG_TRACE_MSG( "\r\n" );
     HAL_DBG_TRACE_INFO( "###### ===== LR1110 Modem Tracker demo application ==== ######\r\n\r\n" );
     HAL_DBG_TRACE_PRINTF( "APP VERSION : %d.%d.%d\r\n\r\n", TRACKER_MAJOR_APP_VERSION, TRACKER_MINOR_APP_VERSION,
@@ -407,8 +407,8 @@ int main( void )
 
     /* Init the LoRaWAN keys set in Commissioning_tracker_ctx.h or using the production keys and init the global
      * context */
-    tracker_init_app_ctx( dev_eui, join_eui, app_key ); 
-    
+    tracker_init_app_ctx( dev_eui, join_eui, app_key );
+
     /* Basic LoRaWAN configuration */
     if( lorawan_init( ) != LR1110_MODEM_RESPONSE_CODE_OK )
     {
@@ -434,7 +434,7 @@ int main( void )
     tracker_ctx.accelerometer_used         = USE_ACCELEROMETER;
 
     /* Init the software watchdog */
-    hal_mcu_init_software_watchdog( tracker_ctx.app_scan_interval * 3 );
+    // hal_mcu_init_software_watchdog( tracker_ctx.app_scan_interval * 3 );
 
     /* Init Leds timer */
     timer_init( &led_tx_timer, on_led_tx_timer_event );
@@ -470,7 +470,7 @@ int main( void )
                 print_lorawan_keys( dev_eui, join_eui, app_key, tracker_ctx.lorawan_pin );
 
                 join_network( );
-            
+
                 device_state = DEVICE_STATE_CYCLE;
 
                 break;
@@ -539,7 +539,7 @@ int main( void )
                         if( tracker_ctx.has_date == true )
                         {
                             struct tm epoch_time;
-                            
+
                             /* Timestamp scan */
                             tracker_ctx.timestamp = lr1110_modem_board_get_systime_from_gps( &lr1110 );
 
@@ -611,7 +611,7 @@ int main( void )
                         device_state = DEVICE_STATE_SEND;
                     }
                 }
-                
+
                 break;
             }
             case DEVICE_STATE_SEND:
@@ -650,7 +650,7 @@ int main( void )
             }
             case DEVICE_STATE_SLEEP:
             {
-                /* go in low power */ 
+                /* go in low power */
                 if( lr1110_modem_board_read_event_line( &lr1110 ) == false )
                 {
                     hal_mcu_low_power_handler( );
@@ -746,7 +746,7 @@ static void build_and_stream_payload( void )
     if( tracker_ctx.nb_detected_satellites > 2 )
     {
         HAL_DBG_TRACE_MSG(" - NAV message :");
-        
+
         tracker_ctx.lorawan_payload[tracker_ctx.lorawan_payload_len++] = TAG_NAV; // GNSS PATCH TAG
         tracker_ctx.lorawan_payload[tracker_ctx.lorawan_payload_len++] = tracker_ctx.nav_message_len; // GNSS LEN
         memcpy(tracker_ctx.lorawan_payload + tracker_ctx.lorawan_payload_len,tracker_ctx.nav_message,tracker_ctx.nav_message_len);
@@ -829,7 +829,7 @@ static lr1110_modem_response_code_t lorawan_init( void )
 #if defined( USE_REGION_EU868 )
         HAL_DBG_TRACE_MSG( "REGION      : EU868\r\n\r\n" );
         modem_response_code |= lr1110_modem_set_region( &lr1110, LR1110_LORAWAN_REGION_EU868 );
-    
+
         modem_response_code |= lr1110_modem_activate_duty_cycle( &lr1110, LORAWAN_DUTYCYCLE_ON);
 #endif
 #if defined( USE_REGION_US915 )
@@ -900,7 +900,7 @@ static void print_lorawan_keys( const uint8_t* dev_eui, const uint8_t* join_eui,
         HAL_DBG_TRACE_PRINTF( "-%02X", join_eui[i] );
     }
     HAL_DBG_TRACE_PRINTF( "\r\n" );
-   
+
 #if (USE_SEMTECH_JOIN_SERVER == 1)
     {
         HAL_DBG_TRACE_MSG( "AppKey      : Semtech join server used\r\n" );
@@ -1016,7 +1016,7 @@ static void lr1110_modem_reset_event( uint16_t reset_count )
 static void lr1110_modem_network_joined( void )
 {
     HAL_DBG_TRACE_INFO( "###### ===== JOINED ==== ######\r\n\r\n" );
-    
+
     /* Set the ADR profile once joined */
     lr1110_modem_set_adr_profile( &lr1110, LORAWAN_MOBILE_DATARATE, adr_custom_list );
 }

@@ -38,7 +38,7 @@
 #include <stdbool.h>  // bool type
 
 #include "stm32l0xx_hal.h"
-#include "stm32l4xx_ll_utils.h"
+#include "stm32l0xx_ll_utils.h"
 #include "lr1110-modem-board.h"
 #include "smtc_hal.h"
 
@@ -123,11 +123,6 @@ static void hal_mcu_gpio_init( void );
 static void hal_mcu_gpio_deinit( void );
 
 /*!
- * \brief init the power voltage detector
- */
-static void hal_mcu_pvd_config( void );
-
-/*!
  * \brief Deinit the MCU
  */
 static void hal_mcu_deinit( void );
@@ -158,6 +153,8 @@ static void vprint( const char* fmt, va_list argp );
  * \brief Function executed on software watchdog event
  */
 static void on_soft_watchdog_event( void* context );
+
+static void hal_mcu_start_systick( void );
 
 /*
  * -----------------------------------------------------------------------------
@@ -220,12 +217,9 @@ void hal_mcu_init( void )
     // Initialize low power timer
     hal_tmr_init( );
 
-    // Init power voltage voltage detector
-    hal_mcu_pvd_config( );
-
     // Initialize UART
 #if( HAL_USE_PRINTF_UART == HAL_FEATURE_ON )
-    hal_uart_init( HAL_PRINTF_UART_ID, UART_TX, UART_RX);
+    hal_uart2_init();
 #endif
 
     // Initialize SPI
@@ -237,10 +231,6 @@ void hal_mcu_init( void )
     // Initialize RTC
     hal_rtc_init( );
 
-    // Initialize I2C
-#if(ACCELEROMETER_MOUNTED == 1)
-    hal_i2c_init( HAL_I2C_ID, I2C_SDA, I2C_SCL );
-#endif
 }
 
 void hal_mcu_disable_irq( void ) { __disable_irq( ); }
@@ -370,32 +360,25 @@ void hal_mcu_partial_sleep_enable( bool enable ) { partial_sleep_enable = enable
 
 static void hal_mcu_system_clock_config( void )
 {
-    RCC_OscInitTypeDef       rcc_osc_init;
+        RCC_OscInitTypeDef       rcc_osc_init;
     RCC_ClkInitTypeDef       rcc_clk_init;
     RCC_PeriphCLKInitTypeDef periph_clk_init;
 
     // Configure the main internal regulator output voltage
     __HAL_RCC_PWR_CLK_ENABLE( );
     __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
-    /* Ensure that MSI is wake-up system clock */
-    __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
 
     // Initializes the CPU, AHB and APB busses clocks
-    rcc_osc_init.OscillatorType      = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_MSI | RCC_OSCILLATORTYPE_HSI;
-    rcc_osc_init.MSIState            = RCC_MSI_ON;
+    rcc_osc_init.OscillatorType      = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSE;
     rcc_osc_init.HSEState            = RCC_HSE_OFF;
-    rcc_osc_init.HSIState            = RCC_HSI_OFF;
+    rcc_osc_init.HSIState            = RCC_HSI_ON;
     rcc_osc_init.LSEState            = RCC_LSE_ON;
     rcc_osc_init.LSIState            = RCC_LSI_OFF;
-    rcc_osc_init.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
-    rcc_osc_init.MSIClockRange       = RCC_MSIRANGE_11;
+    rcc_osc_init.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     rcc_osc_init.PLL.PLLState        = RCC_PLL_ON;
-    rcc_osc_init.PLL.PLLSource       = RCC_PLLSOURCE_MSI;
-    rcc_osc_init.PLL.PLLM            = 3;
-    rcc_osc_init.PLL.PLLN            = 10;
-    rcc_osc_init.PLL.PLLP            = RCC_PLLP_DIV7;
-    rcc_osc_init.PLL.PLLQ            = RCC_PLLQ_DIV2;
-    rcc_osc_init.PLL.PLLR            = RCC_PLLR_DIV2;
+    rcc_osc_init.PLL.PLLSource       = RCC_PLLSOURCE_HSI;
+    rcc_osc_init.PLL.PLLMUL          = RCC_PLLMUL_6;
+    rcc_osc_init.PLL.PLLDIV          = RCC_PLLDIV_3;
     if( HAL_RCC_OscConfig( &rcc_osc_init ) != HAL_OK )
     {
     }
@@ -412,14 +395,20 @@ static void hal_mcu_system_clock_config( void )
     }
 
     periph_clk_init.PeriphClockSelection =
-        RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_LPTIM1 ;
-    periph_clk_init.Lptim1ClockSelection  = RCC_LPTIM1CLKSOURCE_LSE;
+        RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_USART1;
+    periph_clk_init.LptimClockSelection  = RCC_LPTIM1CLKSOURCE_LSE;
     periph_clk_init.RTCClockSelection    = RCC_RTCCLKSOURCE_LSE;
+    periph_clk_init.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
     periph_clk_init.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
     if( HAL_RCCEx_PeriphCLKConfig( &periph_clk_init ) != HAL_OK )
     {
     }
 
+    hal_mcu_start_systick();
+}
+
+static void hal_mcu_start_systick( void )
+{
     // Configure the Systick interrupt time
     HAL_SYSTICK_Config( HAL_RCC_GetHCLKFreq( ) / 1000 );
 
@@ -428,30 +417,6 @@ static void hal_mcu_system_clock_config( void )
 
     // SysTick_IRQn interrupt configuration
     HAL_NVIC_SetPriority( SysTick_IRQn, 0, 0 );
-}
-
-/*!
- * \brief  Programmable Voltage Detector (PVD) Configuration
- *         PVD set to level 6 for a threshold around 2.9V.
- * \param  None
- * \retval None
- */
-static void hal_mcu_pvd_config( void )
-{
-    PWR_PVDTypeDef sConfigPVD;
-    sConfigPVD.PVDLevel = PWR_PVDLEVEL_1;
-    sConfigPVD.Mode     = PWR_PVD_MODE_IT_RISING;
-    if( HAL_PWR_ConfigPVD( &sConfigPVD ) != HAL_OK )
-    {
-        assert_param( FAIL );
-    }
-
-    // Enable PVD
-    HAL_PWR_EnablePVD( );
-
-    // Enable and set PVD Interrupt priority
-    HAL_NVIC_SetPriority( PVD_PVM_IRQn, 0, 0 );
-    HAL_NVIC_EnableIRQ( PVD_PVM_IRQn );
 }
 
 static void hal_mcu_gpio_init( void )
@@ -488,25 +453,15 @@ static void hal_mcu_gpio_deinit( void )
 
 void HAL_MspInit( void )
 {
-    __HAL_RCC_SYSCFG_CLK_ENABLE();
-    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_RCC_SYSCFG_CLK_ENABLE( );
+    __HAL_RCC_PWR_CLK_ENABLE( );
 
-    HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-
-    /* System interrupt init*/
-    /* MemoryManagement_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority( MemoryManagement_IRQn, 0, 0 );
-    /* BusFault_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority( BusFault_IRQn, 0, 0 );
-    /* UsageFault_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority( UsageFault_IRQn, 0, 0 );
-    /* SVCall_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority( SVCall_IRQn, 0, 0 );
-    /* DebugMonitor_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority( DebugMonitor_IRQn, 0, 0 );
-    /* PendSV_IRQn interrupt configuration */
+    // System interrupt init
+    // SVC_IRQn interrupt configuration
+    HAL_NVIC_SetPriority( SVC_IRQn, 0, 0 );
+    // PendSV_IRQn interrupt configuration
     HAL_NVIC_SetPriority( PendSV_IRQn, 0, 0 );
-    /* SysTick_IRQn interrupt configuration */
+    // SysTick_IRQn interrupt configuration
     HAL_NVIC_SetPriority( SysTick_IRQn, 0, 0 );
 }
 
@@ -517,22 +472,26 @@ void HAL_MspInit( void )
  */
 static void hal_mcu_lpm_enter_stop_mode( void )
 {
-    // Disable IRQ while the MCU is not running on MSI
     CRITICAL_SECTION_BEGIN( );
 
-    if( partial_sleep_enable == true )
-    {
-        hal_mcu_deinit( );
-    }
-    else
-    {
-        hal_mcu_deinit_periph( );
-        hal_mcu_deinit( );
-    }
+    hal_mcu_deinit( );
+
+    // Disable the Power Voltage Detector
+    HAL_PWR_DisablePVD( );
+
+    // Clear wake up flag
+    SET_BIT( PWR->CR, PWR_CR_CWUF );
+
+    // Enable Ultra low power mode
+    HAL_PWREx_EnableUltraLowPower( );
+
+    // Enable the fast wake up from Ultra low power mode
+    HAL_PWREx_EnableFastWakeUp( );
 
     CRITICAL_SECTION_END( );
+
     // Enter Stop Mode
-    HAL_PWREx_EnterSTOP2Mode( PWR_STOPENTRY_WFI );
+    HAL_PWR_EnterSTOPMode( PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI );
 }
 
 /*!
@@ -584,7 +543,7 @@ static void hal_mcu_deinit( void )
 #endif
     // Disable UART
 #if( HAL_USE_PRINTF_UART == HAL_FEATURE_ON )
-    hal_uart_deinit( HAL_PRINTF_UART_ID );
+    hal_uart2_deinit();
 #endif
 }
 
@@ -600,7 +559,7 @@ static void hal_mcu_reinit( void )
 
     // Initialize UART
 #if( HAL_USE_PRINTF_UART == HAL_FEATURE_ON )
-    hal_uart_init( HAL_PRINTF_UART_ID, UART_TX, UART_RX);
+    hal_uart2_init();
 #endif
 
     // Initialize SPI
@@ -611,55 +570,33 @@ static void hal_mcu_reinit( void )
 
 static void hal_mcu_system_clock_re_config_after_stop( void )
 {
-    RCC_OscInitTypeDef       rcc_osc_init;
-    RCC_ClkInitTypeDef       rcc_clk_init;
-    RCC_PeriphCLKInitTypeDef periph_clk_init;
-
-    // Configure the main internal regulator output voltage
     __HAL_RCC_PWR_CLK_ENABLE( );
     __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
-    /* Ensure that MSI is wake-up system clock */
-    __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
 
-    // Initializes the CPU, AHB and APB busses clocks
-    rcc_osc_init.OscillatorType      = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_MSI;
-    rcc_osc_init.MSIState            = RCC_MSI_ON;
-    rcc_osc_init.HSEState            = RCC_HSE_OFF;
-    rcc_osc_init.HSIState            = RCC_HSI_OFF;
-    rcc_osc_init.LSEState            = RCC_LSE_ON;
-    rcc_osc_init.LSIState            = RCC_LSI_OFF;
-    rcc_osc_init.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
-    rcc_osc_init.MSIClockRange       = RCC_MSIRANGE_11;
-    rcc_osc_init.PLL.PLLState        = RCC_PLL_ON;
-    rcc_osc_init.PLL.PLLSource       = RCC_PLLSOURCE_MSI;
-    rcc_osc_init.PLL.PLLM            = 3;
-    rcc_osc_init.PLL.PLLN            = 10;
-    rcc_osc_init.PLL.PLLP            = RCC_PLLP_DIV7;
-    rcc_osc_init.PLL.PLLQ            = RCC_PLLQ_DIV2;
-    rcc_osc_init.PLL.PLLR            = RCC_PLLR_DIV2;
-    if( HAL_RCC_OscConfig( &rcc_osc_init ) != HAL_OK )
+    // Enable HSI
+    __HAL_RCC_HSI_CONFIG( RCC_HSI_ON );
+
+    // Wait till HSI is ready
+    while( __HAL_RCC_GET_FLAG( RCC_FLAG_HSIRDY ) == RESET )
     {
     }
 
-    // Initializes the CPU, AHB and APB busses clocks
-    rcc_clk_init.ClockType      = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    rcc_clk_init.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
-    rcc_clk_init.AHBCLKDivider  = RCC_SYSCLK_DIV1;
-    rcc_clk_init.APB1CLKDivider = RCC_HCLK_DIV1;
-    rcc_clk_init.APB2CLKDivider = RCC_HCLK_DIV1;
+    // Enable PLL
+    __HAL_RCC_PLL_ENABLE( );
 
-    if( HAL_RCC_ClockConfig( &rcc_clk_init, FLASH_LATENCY_1 ) != HAL_OK )
+    // Wait till PLL is ready
+    while( __HAL_RCC_GET_FLAG( RCC_FLAG_PLLRDY ) == RESET )
     {
     }
 
-    periph_clk_init.PeriphClockSelection =
-        RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_LPTIM1 ;
-    periph_clk_init.Lptim1ClockSelection  = RCC_LPTIM1CLKSOURCE_LSE;
-    periph_clk_init.RTCClockSelection    = RCC_RTCCLKSOURCE_LSE;
-    periph_clk_init.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
-    if( HAL_RCCEx_PeriphCLKConfig( &periph_clk_init ) != HAL_OK )
+    // Select PLL as system clock source
+    __HAL_RCC_SYSCLK_CONFIG( RCC_SYSCLKSOURCE_PLLCLK );
+
+    // Wait till PLL is used as system clock source
+    while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_PLLCLK )
     {
     }
+
 }
 
 #if( HAL_LOW_POWER_MODE == HAL_FEATURE_OFF )
@@ -688,7 +625,7 @@ static void vprint( const char* fmt, va_list argp )
     char string[HAL_PRINT_BUFFER_SIZE];
     if( 0 < vsprintf( string, fmt, argp ) )  // build string
     {
-        hal_uart_tx( 2, ( uint8_t* ) string, strlen( string ) );
+        hal_uart2_tx(( uint8_t* ) string, strlen( string ) );
     }
 }
 #endif
