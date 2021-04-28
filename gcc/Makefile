@@ -64,7 +64,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 ${TOP_DIR}/Src/apps/Tracker/tracker_utility.c \
-${TOP_DIR}/Src/system_stm32l4xx.c \
+${TOP_DIR}/Src/system_stm32l0xx.c \
 ${TOP_DIR}/Src/smtc_hal/smtc_hal_gpio.c \
 ${TOP_DIR}/Src/smtc_hal/smtc_hal_i2c.c \
 ${TOP_DIR}/Src/smtc_hal/smtc_hal_mcu.c \
@@ -90,32 +90,32 @@ ${TOP_DIR}/Src/radio/gnss/gnss_scan.c \
 ${TOP_DIR}/Drivers/BSP/Components/external_supply/external_supply.c \
 ${TOP_DIR}/Drivers/BSP/Components/Leds/leds.c \
 ${TOP_DIR}/Drivers/BSP/Components/lis2de12/lis2de12.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_lptim.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rng.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rtc_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rtc.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_rtc.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_spi.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c \
-${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_dma_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_dma.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash_ramfunc.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_gpio.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_lptim.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_pwr_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_pwr.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rcc_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rcc.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rng.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rtc_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rtc.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_rtc.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_spi_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_spi.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_spi.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_uart.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_uart_ex.c \
+${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.c \
 
 ifeq ($(TRACKER_APP),1)
 C_SOURCES +=  \
@@ -149,7 +149,7 @@ endif
 
 # ASM sources
 ASM_SOURCES =  \
-${TOP_DIR}/Drivers/CMSIS/Device/ST/STM32L4xx/Source/Templates/gcc/startup_stm32l476xx.s
+${TOP_DIR}/Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l073xx.s
 
 #######################################
 # binaries
@@ -178,16 +178,16 @@ BIN = $(CP) -O binary -S
 # CFLAGS
 #######################################
 # cpu
-CPU = -mcpu=cortex-m4
+CPU = -mcpu=cortex-m0plus
 
 # fpu
-FPU = -mfpu=fpv4-sp-d16
+#FPU = -mfpu=fpv4-sp-d16
 
 # float-abi
-FLOAT-ABI = -mfloat-abi=hard
+#FLOAT-ABI = -mfloat-abi=hard
 
 # mcu
-MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+MCU = $(CPU) -mthumb
 
 # macros for gcc
 # AS defines
@@ -196,7 +196,7 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_FULL_LL_DRIVER \
--DSTM32L476xx \
+-DSTM32L073xx \
 -DUSE_HAL_DRIVER \
 -DLR1110EVK \
 -DMODEM_TO_MODEM \
@@ -225,9 +225,9 @@ C_INCLUDES =  \
 -I${TOP_DIR}/Drivers/BSP/Components/Leds \
 -I${TOP_DIR}/Drivers/BSP/Components/external_supply \
 -I${TOP_DIR}/Drivers/BSP/Components/lis2de12 \
--I${TOP_DIR}/Drivers/CMSIS/Device/ST/STM32L4xx/Include \
+-I${TOP_DIR}/Drivers/CMSIS/Device/ST/STM32L0xx/Include \
 -I${TOP_DIR}/Drivers/CMSIS/Include \
--I${TOP_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc \
+-I${TOP_DIR}/Drivers/STM32L0xx_HAL_Driver/Inc \
 -I${TOP_DIR}/Inc \
 -I${TOP_DIR}/Inc/smtc_hal \
 -I${TOP_DIR}/Inc/boards \
@@ -255,7 +255,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = ${TOP_DIR}/gcc/STM32L476RGTx_FLASH.ld
+LDSCRIPT = ${TOP_DIR}/gcc/stm32l073xx_flash.ld
 
 # libraries
 LIBS = -lc -lm -lnosys
