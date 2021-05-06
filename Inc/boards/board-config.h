@@ -75,7 +75,7 @@ extern "C" {
 #define RADIO_RESET             PB_9
 
 
-#define LNA_PON                 PB_1
+#define LNA_PON                 PB_11
 #define RADIO_FREQ_SEL          PB_2
 #define RADIO_DEVICE_SEL        PA_15
 

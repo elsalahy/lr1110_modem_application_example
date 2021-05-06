@@ -147,7 +147,7 @@ lr1110_modem_response_code_t lr1110_modem_board_init( const void* context, lr111
     radio_event_init( event );
 
     modem_hal_status = lr1110_modem_hal_reset( context );
-    
+
     if( modem_hal_status != LR1110_MODEM_HAL_STATUS_OK)
     {
         /* Something goes wrong with the lr1110 modem */
@@ -166,7 +166,8 @@ lr1110_modem_response_code_t lr1110_modem_board_init( const void* context, lr111
     rf_switch_cfg.tx = LR1110_MODEM_SYSTEM_RFSW0_HIGH | LR1110_MODEM_SYSTEM_RFSW1_HIGH;
     rf_switch_cfg.tx_hp = LR1110_MODEM_SYSTEM_RFSW1_HIGH;
     /* GNSS LNA ON */
-    rf_switch_cfg.gnss =  LR1110_MODEM_SYSTEM_RFSW2_HIGH;
+    rf_switch_cfg.gnss =  LR1110_MODEM_SYSTEM_RFSW2_HIGH| LR1110_MODEM_SYSTEM_RFSW3_HIGH;
+    rf_switch_cfg.wifi =  LR1110_MODEM_SYSTEM_RFSW2_HIGH;
 
     modem_response_code |= lr1110_modem_system_set_dio_as_rf_switch( context, &rf_switch_cfg );
 
