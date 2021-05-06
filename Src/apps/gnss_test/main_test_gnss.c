@@ -46,7 +46,7 @@
  * -----------------------------------------------------------------------------
  * --- PRIVATE CONSTANTS -------------------------------------------------------
  */
- 
+
  #define EPOCH_BUFFER_LEN 10
 
 /*
@@ -91,7 +91,7 @@ int main( void )
     lr1110_modem_version_t       modem;
     gnss_settings_t              gnss_settings;
     uint32_t                     unix_date     = 0;
-    uint8_t                      rx_buffer[EPOCH_BUFFER_LEN] = { 0 };
+    uint8_t                      rx_buffer[EPOCH_BUFFER_LEN] = {'1','6','2','0','3','1','2','3','7','0'};
 
     // Init board
     hal_mcu_init( );
@@ -121,7 +121,7 @@ int main( void )
     // Set default position to Semtech France
     gnss_settings.assistance_position.latitude  = 45.208;
     gnss_settings.assistance_position.longitude = 5.781;
-    
+
     lr1110_modem_gnss_set_assistance_position( &lr1110, &gnss_settings.assistance_position );
 
     // Wait Unix time from user
@@ -129,7 +129,7 @@ int main( void )
 
     while( unix_date == 0 )
     {
-        hal_uart_rx( 2, rx_buffer, EPOCH_BUFFER_LEN );
+        // hal_uart2_tx( 2, rx_buffer, EPOCH_BUFFER_LEN );
 
         for( uint8_t i = 0; i < EPOCH_BUFFER_LEN; i++ )
         {
@@ -144,7 +144,7 @@ int main( void )
     while( 1 )
     {
         HAL_DBG_TRACE_MSG( "\r\nSCAN...\r\n" );
-        
+
         /* Activate the partial low power mode to don't shut down lna during low power */
         hal_mcu_partial_sleep_enable( true );
 
@@ -153,7 +153,7 @@ int main( void )
         gnss_scan_execute( &lr1110 );
 
         gnss_scan_display_results( );
-        
+
         /* Deactivate the partial low power mode */
         hal_mcu_partial_sleep_enable( false );
 
