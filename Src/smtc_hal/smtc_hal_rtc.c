@@ -204,9 +204,6 @@ void hal_rtc_init( void )
     // registers)
     HAL_RTCEx_EnableBypassShadow( &hal_rtc.handle );
 
-    HAL_NVIC_SetPriority( RTC_IRQn, 1, 0 );
-    HAL_NVIC_EnableIRQ( RTC_IRQn );
-
     // Init alarm.
     HAL_RTC_DeactivateAlarm( &hal_rtc.handle, RTC_ALARM_A );
 
@@ -530,7 +527,30 @@ static uint64_t rtc_get_timestamp_in_ticks( RTC_DateTypeDef* date, RTC_TimeTypeD
     return timestamp_in_ticks;
 }
 
-void RTC_WKUP_IRQHandler( void ) { HAL_RTCEx_WakeUpTimerIRQHandler( &hal_rtc.handle ); }
+// void RTC_WKUP_IRQHandler( void ) { HAL_RTCEx_WakeUpTimerIRQHandler( &hal_rtc.handle ); }
+
+
+void RTC_IRQHandler( void )
+{
+     RTC_HandleTypeDef* hrtc = &hal_rtc.handle;
+
+    // Clear the EXTI's line Flag for RTC Alarm
+    __HAL_RTC_ALARM_EXTI_CLEAR_FLAG( );
+
+    // Gets the AlarmA interrupt source enable status
+    if( __HAL_RTC_ALARM_GET_IT_SOURCE( hrtc, RTC_IT_ALRA ) != RESET )
+    {
+        // Gets the pending status of the AlarmA interrupt
+        if( __HAL_RTC_ALARM_GET_FLAG( hrtc, RTC_FLAG_ALRAF ) != RESET )
+        {
+            // Clear the AlarmA interrupt pending bit
+            __HAL_RTC_ALARM_CLEAR_FLAG( hrtc, RTC_FLAG_ALRAF );
+            // AlarmA callback
+            HAL_RTC_AlarmAEventCallback( hrtc );
+        }
+    }
+}
+
 
 void HAL_RTC_MspInit( RTC_HandleTypeDef* rtc_handle )
 {

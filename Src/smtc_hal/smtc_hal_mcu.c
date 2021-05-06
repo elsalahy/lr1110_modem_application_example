@@ -268,24 +268,24 @@ void hal_mcu_wait_us( const int32_t microseconds )
 
 void hal_mcu_init_software_watchdog( uint32_t value )
 {
-    timer_init( &soft_watchdog, on_soft_watchdog_event );
-    timer_set_value( &soft_watchdog, value );
-    timer_start( &soft_watchdog );
+    // timer_init( &soft_watchdog, on_soft_watchdog_event );
+    // timer_set_value( &soft_watchdog, value );
+    // timer_start( &soft_watchdog );
 }
 
 void hal_mcu_set_software_watchdog_value( uint32_t value )
 {
-    timer_set_value( &soft_watchdog, value );
+    // timer_set_value( &soft_watchdog, value );
 }
 
 void hal_mcu_start_software_watchdog( void )
 {
-    timer_start( &soft_watchdog );
+    // timer_start( &soft_watchdog );
 }
 
 void hal_mcu_reset_software_watchdog( void )
 {
-    timer_reset( &soft_watchdog );
+    // timer_reset( &soft_watchdog );
 }
 
 uint16_t hal_mcu_get_vref_level( void )
