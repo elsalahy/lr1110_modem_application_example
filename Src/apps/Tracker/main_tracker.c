@@ -492,7 +492,7 @@ int main( void )
                     lr1110_modem_adr_profiles_t adr_profile;
 
                     /* Reload the software watchdog */
-                    hal_mcu_reset_software_watchdog( );
+                    // hal_mcu_reset_software_watchdog( );
 
                     /* Adapt the ADR following the acceleromer movement */
                     if(tracker_ctx.send_alive_frame == true) // means device is static
@@ -633,7 +633,7 @@ int main( void )
             case DEVICE_STATE_CYCLE:
             {
                 /* Reload the software watchdog */
-                hal_mcu_reset_software_watchdog( );
+                // hal_mcu_reset_software_watchdog( );
 
                 device_state = DEVICE_STATE_SLEEP;
 
@@ -748,9 +748,9 @@ static void build_and_stream_payload( void )
         HAL_DBG_TRACE_MSG(" - NAV message :");
 
         tracker_ctx.lorawan_payload[tracker_ctx.lorawan_payload_len++] = TAG_NAV; // GNSS PATCH TAG
-        tracker_ctx.lorawan_payload[tracker_ctx.lorawan_payload_len++] = tracker_ctx.nav_message_len; // GNSS LEN
-        memcpy(tracker_ctx.lorawan_payload + tracker_ctx.lorawan_payload_len,tracker_ctx.nav_message,tracker_ctx.nav_message_len);
-        tracker_ctx.lorawan_payload_len += tracker_ctx.nav_message_len;
+        tracker_ctx.lorawan_payload[tracker_ctx.lorawan_payload_len++] = (tracker_ctx.nav_message_len - 1); // GNSS LEN
+        memcpy(tracker_ctx.lorawan_payload + tracker_ctx.lorawan_payload_len,(tracker_ctx.nav_message + 1),(tracker_ctx.nav_message_len -1));
+        tracker_ctx.lorawan_payload_len += (tracker_ctx.nav_message_len - 1) ;
 
         /* Push the NAV message in the FiFo stream */
         add_payload_in_streaming_fifo( tracker_ctx.lorawan_payload, tracker_ctx.lorawan_payload_len );
